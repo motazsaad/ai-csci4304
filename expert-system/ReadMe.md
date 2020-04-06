@@ -17,14 +17,14 @@ Features
 * Matcher based on the RETE algorithm.
 
 
-Difference between CLIPS and PyKnow
+Difference between CLIPS and Experta
 -----------------------------------
 
-#. CLIPS is a programming language, PyKnow is a Python library. This
+#. CLIPS is a programming language, Experta is a Python library. This
    imposes some limitations on the constructions we can do (specially on
    the LHS of a rule).
 
-#. CLIPS is written in C, PyKnow in Python. A noticeable impact in
+#. CLIPS is written in C, Experta in Python. A noticeable impact in
    performance is to be expected.
 
 #. In CLIPS you add facts using `assert`, in Python `assert` is a
@@ -46,7 +46,7 @@ matching rules.
 Facts
 -----
 
-`Facts` are the basic unit of information of PyKnow. They are used by
+`Facts` are the basic unit of information of Experta. They are used by
 the system to reason about the problem.
 
 Let's enumerate some facts about `Facts`, so... metafacts ;)
@@ -107,7 +107,7 @@ Let's enumerate some facts about `Facts`, so... metafacts ;)
 
    .. code-block:: python
 
-      from pyknow import Fact
+      from Experta import Fact
       from django.contrib.auth.models import User as DjangoUser
 
       class User(Fact):
@@ -137,7 +137,7 @@ Let's enumerate some facts about `Facts`, so... metafacts ;)
 Rules
 -----
 
-In PyKnow a **rule** is a callable, decorated with `Rule`.
+In Experta a **rule** is a callable, decorated with `Rule`.
 
 Rules have two components, LHS (left-hand-side) and RHS
 (right-hand-side).
@@ -196,7 +196,7 @@ For a `Rule` to be useful, it must be a method of a `KnowledgeEngine` subclass.
 .. note::
 
    For a list of more complex operators you can check the
-   :py:mod:`pyknow.operator` module.
+   :py:mod:`Experta.operator` module.
 
 
 `Facts` vs `Patterns`
@@ -206,7 +206,7 @@ The difference between `Facts` and `Patterns` is small. In fact,
 `Patterns` are just `Facts` containing **Pattern Conditional Elements**
 instead of regular data. They are used only in the *LHS* of a rule.
 
-If you don't provide the content of a pattern as a **PCE**, PyKnow will
+If you don't provide the content of a pattern as a **PCE**, Experta will
 enclose the value in a `LiteralPCE` automatically for you.
 
 Also, you can't declare any Fact containing a **PCE**, if you do, you
@@ -219,9 +219,9 @@ will receive a nice exception back.
    Traceback (most recent call last):
      File "<ipython-input-4-b36cff89278d>", line 1, in <module>
        ke.declare(Fact(L('hi')))
-     File "/home/pyknow/pyknow/engine.py", line 210, in declare
+     File "/home/Experta/Experta/engine.py", line 210, in declare
        self.__declare(*facts)
-     File "/home/pyknow/pyknow/engine.py", line 191, in __declare
+     File "/home/Experta/Experta/engine.py", line 191, in __declare
        "Declared facts cannot contain conditional elements")
    TypeError: Declared facts cannot contain conditional elements
 
@@ -271,7 +271,7 @@ After that, you can instantiate it, populate it with facts, and finally run it.
 .. code-block:: python
    :caption: greet.py
 
-   from pyknow import *
+   from Experta import *
 
    class Greetings(KnowledgeEngine):
        @DefFacts()
@@ -413,7 +413,7 @@ Cycle of execution
 
 In a conventional programming style, the starting point, the stopping point,
 and the sequence of operations are defined explicitly by the programmer. With
-PyKnow, the program flow does not need to be defined quite so explicitly. The
+Experta, the program flow does not need to be defined quite so explicitly. The
 knowledge (`Rules`) and the data (`Facts`) are separated, and the
 `KnowledgeEngine` is used to apply the knowledge to the data.
 
