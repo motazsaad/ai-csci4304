@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<!-- saved from url=(0057)https://cezannec.github.io/Convolutional_Neural_Networks/ -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Convolutional Neural Networks – Cezanne Camacho – Machine and deep learning educator.</title>
+
+        
+    
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+    
+    <meta name="description" content="Image classification is a challenging task for computers. Convolutional neural networks represent one data-driven approach to this challenge. This post will be about image representation and the layers that make up a convolutional neural network.
+
+
+
+
+">
+    <meta property="og:description" content="Image classification is a challenging task for computers. Convolutional neural networks represent one data-driven approach to this challenge. This post will be about image representation and the layers that make up a convolutional neural network.
+
+
+
+
+">
+    
+    <meta name="author" content="Cezanne Camacho">
+
+    
+    <meta property="og:title" content="Convolutional Neural Networks">
+    <meta property="twitter:title" content="Convolutional Neural Networks">
+    
+
+    <!--[if lt IE 9]>
+      <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <link rel="stylesheet" type="text/css" href="./Convolutional Neural Networks – Cezanne Camacho – Machine and deep learning educator._files/style.css">
+    <link rel="alternate" type="application/rss+xml" title="Cezanne Camacho - Machine and deep learning educator." href="https://cezannec.github.io/feed.xml">
+
+    <!-- Created with Jekyll Now - http://github.com/barryclark/jekyll-now -->
+  </head>
+
+  <body data-gr-c-s-loaded="true">
+    <div class="wrapper-masthead">
+      <div class="container">
+        <header class="masthead clearfix">
+          <a href="https://cezannec.github.io/" class="site-avatar"><img src="./Convolutional Neural Networks – Cezanne Camacho – Machine and deep learning educator._files/13972366"></a>
+
+          <div class="site-info">
+            <h1 class="site-name"><a href="https://cezannec.github.io/">Cezanne Camacho</a></h1>
+            <p class="site-description">Machine and deep learning educator.</p>
+          </div>
+
+          <nav>
+            <a href="https://cezannec.github.io/">Blog</a>
+            <a href="https://cezannec.github.io/about">About</a>
+          </nav>
+        </header>
+      </div>
+    </div>
+
+    <div id="main" role="main" class="container">
+      <article class="post">
+  <h1>Convolutional Neural Networks</h1>
+
+  <div class="entry">
+    <p>Image classification is a challenging task for computers. Convolutional neural networks represent one data-driven approach to this challenge. This post will be about image representation and the layers that make up a convolutional neural network.</p>
+<p align="center">
+<img src="./Convolutional Neural Networks – Cezanne Camacho – Machine and deep learning educator._files/CNN_ex.png" alt="A CNN that sees an image of a car and outputs a class." width="600">
+</p>
+
+<!--more-->
+
+<hr>
+
+<h2 id="neural-network-structure">Neural Network Structure</h2>
+
+<p>This post is the second in a series about understanding how neural networks learn to separate and classify visual data. In the <a href="https://cezannec.github.io/Intro_Neural_Networks/">last post</a>, I went over why neural networks work: they rely on the fact that most data can be represented by a smaller, simpler set of features. Neural networks are made of many nodes that learn how to best separate training data into classes or other specified groups, and many layers of nodes can create more and more complex boundaries for separating and grouping this data.</p>
+
+<p align="center">  
+<img src="./Convolutional Neural Networks – Cezanne Camacho – Machine and deep learning educator._files/complete_nn.png" alt="Complete neural network." width="500">
+</p>
+
+<hr>
+
+<h2 id="image-classification">Image Classification</h2>
+
+<p>In the case of image classification, we want a neural network that looks at an image and outputs the correct class for that image. Let’s take an image of a car as an example.</p>
+
+<p align="center">  
+<img src="./Convolutional Neural Networks – Cezanne Camacho – Machine and deep learning educator._files/image_classification.png" alt="Image classification pipeline." width="500">
+</p>
+
+<p>It’s simple for us to look at this image and identify the car, but when we give a neural network this image, what does it see?</p>
+
+<h3 id="images-as-grids-of-pixels">Images as Grids of Pixels</h3>
+
+<p>An image is seen by a neural network (and by computers) as a grid of numerical values. Below, you’ll see a zoomed-in portion of a grayscale image of a car. The image is broken up into a fine grid, and each of the grid cells is called a pixel. For grayscale images, each pixel has a value between 0 and 255, where 0 is black and 255 is white; shades of gray are anywhere in between.</p>
+
+<p align="center">  
+<img src="./Convolutional Neural Networks – Cezanne Camacho – Machine and deep learning educator._files/grayscale_image.png" alt="Grayscale pixel values 0-255." width="400">
+</p>
+
+<p>For a standard color image, there are red, green, and blue pixel values for each (x,y) pixel location. We can think of this as a stack of three images, one for each of the red, green, and blue color components. You may see a color pixel value written as a list of three numerical values. For example, for an RGB pixel value,  <code class="highlighter-rouge">[255,0,0]</code> is pure red and <code class="highlighter-rouge">[200,0,200]</code> is purple. In this way, we can think of any image as a 3D volume with some width, height, <em>and</em> color depth. Grayscale images have a color depth of 1.</p>
+
+<p align="center">  
+<img src="./Convolutional Neural Networks – Cezanne Camacho – Machine and deep learning educator._files/color_image.png" alt="Color image in x-y space, with a depth of 3 for 3 RGB color channels." width="600">
+</p>
+
+<p>To create an image classifier, we need an algorithm that can look at these pixel values and classify this image as a car. We also want a classifier to be able to detect this car under varying light conditions (at night or during a sunny day), and we want the classifier to generalize well so that it can recognize a variety of cars in different environments and in different poses.</p>
+
+<p align="center">  
+<img src="./Convolutional Neural Networks – Cezanne Camacho – Machine and deep learning educator._files/var_cars.png" alt="Variety of images of a car in different scenarios." width="600">
+</p>
+
+<p>If you look at just a small sample of car images, you can see that the pixel values are <em>really</em> different for each of these images. So, the challenge becomes: how can we create a classifier that, for any of these grids of pixel values, will be able to classify each one of them as a car.</p>
+
+<h3 id="data-driven-approach">Data-Driven Approach</h3>
+
+<p>Since there is no clear way to create a set of rules about pixel values that make up a car, we’ll instead take a data-driven approach:</p>
+
+<blockquote>
+  <ol>
+    <li>Collect a set of images with <em>true</em> class labels.</li>
+    <li>Train a model to produce an accurate, <em>predicted</em> class label.</li>
+  </ol>
+</blockquote>
+
+<p align="center">  
+<img src="./Convolutional Neural Networks – Cezanne Camacho – Machine and deep learning educator._files/training_data.png" alt="True and predicted class labels for a car image." width="600">
+</p>
+
+<p>In this example, we’ll plan to train a convolutional neural network. As this network trains, it should learn what parts of a car are important to recognize, such as wheels and windows, and it should be general enough to recognize cars in a variety of positions and environments.</p>
+
+<hr>
+
+<h2 id="convolutional-neural-network">Convolutional Neural Network</h2>
+
+<p>To approach this image classification task, we’ll use a convolutional neural network (CNN), a special kind of neural network that can find and represent patterns in 3D image space. Many neural networks look at individual inputs (in this case, individual pixel values), but convolutional neural networks can look at groups of pixels in an area of an image and learn to find spatial patterns.</p>
+
+<p>Every CNN is made up of multiple layers, the three main types of layers are convolutional, pooling, and fully-connected, as pictured below. Typically, you’ll see CNN’s made of many layers, especially convolutional and pooling layers. Each of these layers is made of nodes that look at some input data and produce an output, so let’s go over what each of these layers does!</p>
+
+<p align="center">
+<img src="./Convolutional Neural Networks – Cezanne Camacho – Machine and deep learning educator._files/CNN_ex.png" alt="A CNN that sees an image of a car and outputs a class." width="600">
+</p>
+
+<h3 id="convolutional-layer">Convolutional Layer</h3>
+
+<p>The convolutional layer can be thought of as the <em>feature extractor</em> of this network, it learns to find spatial features in an input image. This layer is produced by applying a series of many different image filters, also known as convolutional kernels, to an input image. These filters are very small grids of values that slide over an image, pixel-by-pixel, and produce a filtered output image that will be about the same size as the input image. Multiple kernels will produce multiple filtered, output images.</p>
+
+<p align="center">
+<img src="./Convolutional Neural Networks – Cezanne Camacho – Machine and deep learning educator._files/conv_layer.gif" alt="Convolutional layer made of multiple filters." width="500">
+</p>
+
+<p>Say we have four different convolutional kernels, these will produce four different, filtered images as output. The idea is that each filter will extract a different feature from an input image and these features will eventually help to classify that image, for example, one filter might detect the edges of objects in that image and another might detect unique patterns in color. These filters, stacked together, are what make up a convolutional layer.</p>
+
+<hr>
+
+<h2 id="high-pass-filter">High-pass Filter</h2>
+
+<p>Let’s take a closer look at one type of convolutional kernel: a high-pass image filter. High-pass filters are meant to detect abrupt changes in intensity over a small area. So, in a small patch of pixels, a high-pass filter will highlight areas that change from dark to light pixels (and vice versa). I’ll be looking at patterns of intensity and pixel values in a grayscale image.</p>
+
+<p align="center">
+<img src="./Convolutional Neural Networks – Cezanne Camacho – Machine and deep learning educator._files/filtered_ex.png" alt="Filtered image of a car." width="500">
+</p>
+
+<p>For example, if we put an image of a car through a high-pass filter, we expect the edges of the car, where the pixel values change abruptly from light to dark, to be detected. The edges of objects are often areas of abrupt intensity change and, for this reason, high-pass filters are sometimes called “edge detection filters.”</p>
+
+<h4 id="convolutional-kernels">Convolutional Kernels</h4>
+
+<p>The filters I’ll be talking about are in the form of matrices, also called convolutional kernels, which are just grids of numbers that modify an image. Below is an example of a high-pass filter, a 3x3 kernel that does edge detection.</p>
+
+<p align="center">
+<img src="./Convolutional Neural Networks – Cezanne Camacho – Machine and deep learning educator._files/edge_detection_filter.png" alt="3x3 edge detection filter with row values [0,-1,0], [-1,4,-1], [0,-1,0]." width="200">
+</p>
+
+<p>You may notice that all the elements in this 3x3 grid sum to zero. For an edge detection filter, it’s important that all of it’s’ elements sum to zero because it’s computing the difference or change between neighboring pixels. If these pixel weights did not add up to zero, then the calculated difference would be either positively or negatively weighted, which has the effect of brightening or darkening the entire filtered image, respectively.</p>
+
+<h3 id="convolution">Convolution</h3>
+
+<p>To apply this filter to an image, an input image, F(x,y), is convolved with the kernel, K. Convolution is represented by an asterisk (not to be mistaken for multiplication). It involves taking a kernel, which is our small grid of numbers, and passing it over an image, pixel-by-pixel, creating another edge-detected output image whose appearance depends on the kernel values.</p>
+
+<p align="center">
+<img src="./Convolutional Neural Networks – Cezanne Camacho – Machine and deep learning educator._files/filter_in_action.gif" alt="Filter passing over an image of a car." width="500">
+</p>
+
+<p>I’ll walk through a specific example, using the 3x3 edge detection filter. To better see the pixel-level operations, I’ll zoom in on the image of the car.</p>
+
+<p align="center">
+<img src="./Convolutional Neural Networks – Cezanne Camacho – Machine and deep learning educator._files/zoomed_corner.png" alt="Zoomed in pixel area near the top-right edge of the car." width="600">
+</p>
+
+<p>For every pixel in this grayscale image, we place our kernel over it, so that the selected pixel is at the center of the kernel, and perform convolution. In the below image, I’m selecting a center pixel with a value of 200, as an example.</p>
+
+<p align="center">
+<img src="./Convolutional Neural Networks – Cezanne Camacho – Machine and deep learning educator._files/pixel_selection.png" alt="Kernel overlaid on a 3x3 pixel area." width="500">
+</p>
+
+<p>The steps for a complete convolution are as follows:</p>
+<ol>
+  <li>Multiply the values in the kernel with their matching pixel value. So, the value in the top left of the 3x3 kernel (0), will be multiplied by the pixel value in that <em>same</em> corner in our image area (150).</li>
+  <li>Sum all these multiplied pairs of values to get a new value, in this case, 175. This value will be the new pixel value in the filtered output image, at the same (x,y) location as the selected center pixel.</li>
+</ol>
+
+<p align="center">
+<img src="./Convolutional Neural Networks – Cezanne Camacho – Machine and deep learning educator._files/convolution_steps.gif" alt="Convolution operations." width="500">
+</p>
+
+<p>This process repeats for every pixel in the input image, until we are left with a complete, filtered output.</p>
+
+<h4 id="weights">Weights</h4>
+
+<p>Before we move on, I want to add a bit of terminology. The values inside a kernel, which are multiplied by their corresponding pixel value, are called <strong>weights</strong>. This is because they determine how important (or how weighty) a pixel is in forming a new, output image. You’ll notice that the center pixel has a weight of 4, which means it is heavily, positively weighted. Out of all the pixels in a 3x3 patch, the center pixel will be the most important in determining the value of the pixel in the output, filtered image.</p>
+
+<p align="center">
+<img src="./Convolutional Neural Networks – Cezanne Camacho – Machine and deep learning educator._files/weights.png" alt="3x3 kernel weight values are highlighted." width="500">
+</p>
+
+<p>The kernel also contains negative weights with a value of -1. These correspond to the pixels that are directly above and below, and to the left and right, of the center pixel. These pixels are closest to the center pixel and, because they are symmetrically distributed around the center, we can say that this kernel will detect any change in intensity around a center pixel on its left and right sides <em>and</em> on its top and bottom sides.</p>
+
+<h4 id="image-borders">Image Borders</h4>
+
+<p>The only pixels for which convolution doesn’t work are the pixels at the borders of an image. A 3x3 kernel cannot be perfectly placed over a center pixel at the edges or corners of an image. In practice, there are a few ways of dealing with this, the most common ways are to either pad this image with a border of 0’s (or another grayscale value) so that we can perfectly overlay a kernel on all the pixel values in the original image, or to ignore the pixel values at the borders of the image, and only look at pixels where we can completely overlay the 3x3 convolutional kernel.</p>
+
+<p align="center">
+<img src="./Convolutional Neural Networks – Cezanne Camacho – Machine and deep learning educator._files/edge_handling.gif" alt="Convolutional kernel, moving to the edges of an image, where it cannot entirely cover the pixels." width="500">
+</p>
+
+<p>Often, there is not a lot of useful information at the border of an image, but if you do choose to ignore this information, every filtered image will be just a little bit smaller than the original input image. For a 3x3 kernel, we’ll actually lose a pixel from each side of an image, resulting in a filtered output that is two pixels smaller in width and in height than the original image. You can also choose to make larger filters. 3x3 is one of the smallest sizes and it’s good for looking at small pixel areas, but if you are analyzing larger images you may want to increase the area and use kernels that are 5x5, 7x7, or larger. Usually, you want an odd number so that the kernel nicely overlays a center pixel.</p>
+
+<p align="center">
+<img src="./Convolutional Neural Networks – Cezanne Camacho – Machine and deep learning educator._files/horizontal_filter.png" alt="3x3 horizontal edge detection filter." width="500">
+</p>
+
+<p>Above is another type of edge detection filter; this filter is computing the difference around a center pixel but it’s only looking at the bottom row and top row of surrounding pixel values. The result is a horizontal edge detector. In this way, you can create oriented edge detectors!</p>
+
+<p align="center">
+<img src="./Convolutional Neural Networks – Cezanne Camacho – Machine and deep learning educator._files/CNN_ex.png" alt="A CNN that sees an image of a car and outputs a class." width="600">
+</p>
+
+<p>So, these convolutional kernels, when applied to an image, make a filtered image and <em>several</em> filtered images make a convolutional layer.</p>
+
+<hr>
+
+<h2 id="activation-function">Activation Function</h2>
+
+<p>Recall that grayscale images have pixels values that fall in a range from 0-255. However, neural networks work best with scaled “strength” values between 0 and 1 (we briefly mentioned this in the last post). So, in practice, the input image to a CNN is a grayscale image with pixel values between 0 (black) and 1 (white); a light gray may be a value like 0.78. Converting an image from a pixel value range of 0-255 to a range of 0-1 is called <strong>normalization</strong>. Then, this normalized input image is filtered and a convolutional layer is created. Every pixel value in a filtered image, created by a convolution operation, will fall in a different range; there may even be pixel values that are negative.</p>
+
+<p>To account for this change in pixel value, following a convolutional layer, a CNN applies an <strong>activation function</strong> that transforms each pixel value.</p>
+
+<p align="center">
+<img src="./Convolutional Neural Networks – Cezanne Camacho – Machine and deep learning educator._files/relu_ex.png" alt="The ReLu activation function." width="500">
+</p>
+
+<p>In a CNN, you’ll often use a ReLu (Rectified Linear Unit) activation function; this function simply turns all negative pixel values into 0’s (black). For an input, x, the ReLU function returns x for all values of x &gt; 0, and returns 0 for all values of x ≤ 0. An activation function also introduces nonlinearity into a model, and this means that the CNN will be able to find nonlinear thresholds/boundaries that effectively separate and classify some training data.</p>
+
+<hr>
+
+<h2 id="maxpooling-layer">Maxpooling Layer</h2>
+
+<p>After a convolutional layer comes a pooling layer; the most common type of pooling layer is a <em>maxpooling</em> layer. Each of these layers looks at the pixel values in an image, so, to describe maxpooling, I’ll focus on a small pixel area. First, a maxpooling operation breaks an image into smaller patches, often 2x2 pixel areas.</p>
+
+<p align="center">
+<img src="./Convolutional Neural Networks – Cezanne Camacho – Machine and deep learning educator._files/patches.png" alt="2x2 pixel patches." width="300">
+</p>
+
+<p>Let’s zoom in even further on four of these patches. A maxpooling layer is defined by the patch size, 2x2, and a stride. The patch can be thought of as a 2x2 window that the maxpooling layer looks at to select a maximum pixel value. It then moves this window by some stride across and down the image. For a patch of size 2x2 and a stride of 2, this window will perfectly cover the image. A smaller stride would see some overlap in patches and a larger stride would miss some pixels entirely. So, we usually see a patch size and a stride size that are the same.</p>
+
+<p align="center">
+<img src="./Convolutional Neural Networks – Cezanne Camacho – Machine and deep learning educator._files/stride.gif" alt="Maxpooling 2x2 stride box moving over a 4x4 image with no overlap." width="400">
+</p>
+
+<p>For each 2x2 patch, a maxpooling layer looks at each value in a patch and selects only the maximum value. In the red patch, it selects 140, in the yellow, 90, and so on, until we are left with four values from the four patches.</p>
+
+<p align="center">
+<img src="./Convolutional Neural Networks – Cezanne Camacho – Machine and deep learning educator._files/maxpool.png" alt="2x2 pixel patches." width="500">
+</p>
+
+<p>Now, you might be wondering why we would use a maxpooling layer in the first place, especially since this layer is discarding pixel information. We use a maxpooling layer for a few reasons.</p>
+
+<p>First, <strong>dimensionality reduction</strong>; as an input image moves forward through a CNN, we are taking a fairly flat image in x-y space and expanding its depth dimension while decreasing its height and width. The network distills information about the content of an image and squishes it into a representation that will make up a reasonable number of inputs that can be seen by a fully-connected layer. Second, maxpooling makes a network resistant to small pixel value changes in an input image. Imagine that some of the pixel values in a small patch are a little bit brighter or darker or that an object has moved to the right by a few pixels. For similar images, even if a patch has some slightly different pixel values, the maximum values extracted in successive pooling layers, should be similar. Third, by reducing the width and height of image data as it moves forward through the CNN, the maxpooling layer <strong>mimics an increase in the field of view</strong> for later layers. For example, a 3x3 kernel placed over an original input image will see a 3x3 pixel area at once, but that same kernel, applied to a pooled version of the original input image (ex. an image reduced in width and height by a factor of 2), will see the same number of pixels, but the 3x3 area corresponds to a 2x larger area in the <em>original</em> input image. This allows later convolutional layers to detect features in a larger region of the input image.</p>
+
+<p>There are also other kinds of networks that do <em>not</em> use maxpooling, such as Capsule Networks, which you can read about in a <a href="https://cezannec.github.io/Capsule_Networks/">separate blog post</a>.</p>
+
+<hr>
+
+<h2 id="fully-connected-layer">Fully-connected Layer</h2>
+
+<p>At the end of a convolutional neural network, is a fully-connected layer (sometimes more than one). Fully-connected means that every output that’s produced at the end of the last pooling layer is an input to each node in this fully-connected layer. For example, for a final pooling layer that produces a stack of outputs that are 20 pixels in height and width and 10 pixels in depth (the number of filtered images), the fully-connected layer will see 20x20x10 = 4000 inputs. The role of the last fully-connected layer is to produce a list of <strong>class scores</strong>, which you saw in the <a href="https://cezannec.github.io/Intro_Neural_Networks/">last post</a>, and perform classification based on image features that have been extracted by the earlier convolutional and pooling layers; so, the last fully-connected layer will have as many nodes as there are classes.</p>
+
+<p align="center">
+<img src="./Convolutional Neural Networks – Cezanne Camacho – Machine and deep learning educator._files/CNN_ex.png" alt="A CNN that sees an image of a car and outputs a class." width="600">
+</p>
+
+<hr>
+
+<h2 id="cnn-layers-summary">CNN Layers, Summary</h2>
+
+<p>CNN’s are made of a number of layers: a series of convolutional layers + activation and maxpooling layers, and at least one, final fully-connected layer that can produce a set of class scores for a given image. The convolutional layers of a CNN act as feature extractors; they extract shape and color patterns from the pixel values of training images. It’s important to note that the behavior of the convolutional layers, and the features they learn to extract, are defined entirely by the <strong>weights</strong> that make up the convolutional kernels in the network. A CNN learns to find the best weights during training using a process called backpropagation, which looks at any classification errors that a CNN makes during training, finds which weights in that CNN are responsible for that error, and changes those weights accordingly.</p>
+
+<hr>
+
+<h2 id="pytorch-code-examples">PyTorch Code Examples</h2>
+
+<p>If you’d like to see how to create these kinds of CNN layers using PyTorch, take a look at my <a href="https://github.com/cezannec/intro-computervision">Github, tutorial repository</a>. You may choose to skim the code and look at the output or set up a local environment and run the code on your own computer (instructions for setting up a local environment are documented in the repository <code class="highlighter-rouge">readme</code>).</p>
+
+<p>Convolutional layers, activation functions, and maxpooling layers are in the first notebook: <strong>1. Convolutional NN Layers, Visualization</strong>.</p>
+
+<p align="center">
+<img src="./Convolutional Neural Networks – Cezanne Camacho – Machine and deep learning educator._files/all_layers_code.png" alt="Output of all CNN layers executed in PyTorch code." width="600">
+</p>
+
+<p>Note that, in the first notebook, I’ve explicitly defined the weights of the convolutional layer. However, when we get to training a neural network on image data, the network will not be given any weight values; it will <em>learn</em> the best weights for convolutional kernels that extract features from an input image. These learned features will be used to separate different classes of data.</p>
+
+<hr>
+
+<p>If you are interested in my work and thoughts, check out my <a href="https://twitter.com/cezannecam">Twitter</a> or connect with me on <a href="https://www.linkedin.com/in/cezanne-camacho-422823b2/">LinkedIn</a>.</p>
+
+
+  </div>
+
+  <div class="date">
+    Written on June  3, 2018
+  </div>
+
+  
+</article>
+
+    </div>
+
+    <div class="wrapper-footer">
+      <div class="container">
+        <footer class="footer">
+          
+<a href="mailto:cezannec@alumni.stanford.edu"><i class="svg-icon email"></i></a>
+
+
+<a href="https://github.com/cezannec"><i class="svg-icon github"></i></a>
+
+<a href="https://www.linkedin.com/in/cezanne-camacho-422823b2/"><i class="svg-icon linkedin"></i></a>
+
+
+<a href="https://www.twitter.com/cezannecam"><i class="svg-icon twitter"></i></a>
+
+
+
+        </footer>
+      </div>
+    </div>
+
+    
+
+  
+
+</body></html>
