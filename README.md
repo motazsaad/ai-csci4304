@@ -21,10 +21,9 @@ This course provides students with the main fundamentals of Artificial Intellige
 
 ## Textbooks
 
-Michael Negnevitsky, Artificial Intelligence: Intelligent Systems Approach, 3/E, ISBN: 9781408225745, 2011.
-Stuart Russell and Peter Norvig, Artificial Intelligence: A Modern Approach, Global Edition 3/E, ISBN: 9781292153964, 2017.
-
-Alberto Artasanchez; Prateek Joshi, Artificial Intelligence with Python: Your complete guide to building intelligent apps using Python 3.x and TensorFlow 2, 2nd Edition, ISBN 9781839219535, Publisher: Packt Publishing, Published: January 2020.
+* Michael Negnevitsky, Artificial Intelligence: Intelligent Systems Approach, 3/E, ISBN: 9781408225745, 2011.
+* Stuart Russell and Peter Norvig, Artificial Intelligence: A Modern Approach, Global Edition 3/E, ISBN: 9781292153964, 2017.
+* Alberto Artasanchez; Prateek Joshi, Artificial Intelligence with Python: Your complete guide to building intelligent apps using Python 3.x and TensorFlow 2, 2nd Edition, ISBN 9781839219535, Publisher: Packt Publishing, Published: January 2020.
 
 ## Topics
 
